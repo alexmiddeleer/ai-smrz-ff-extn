@@ -1,4 +1,4 @@
-# smrz-ff-ext
+# ai-smrz-ff-ext
 
 This is a firefox extension for briefly summarizing a web page. It works offline and sends no personal data to any server, thanks to Firefox's [experimental huggingface integration](https://firefox-source-docs.mozilla.org/toolkit/components/ml/extensions.html).
 
