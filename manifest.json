@@ -11,9 +11,6 @@
     "activeTab",
     "scripting"
   ],
-  "optional_permissions": [
-    "trialML"
-  ],
   "action": {
     "default_popup": "extension_dist/popup.html"
   },

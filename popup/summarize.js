@@ -1,26 +1,10 @@
-console.log('starting up')
-if (browser.permissions.contains({ permissions: ['trialML'] })) {
-    console.log("correct permissions, proceeding")
-} else {
-    console.log("missing trialML permissions, aborting!")
-    throw ("No trialML permission, please manually grant this permission to the extension")
-}
-browser.trial.ml.onProgress.addListener(progressData => {
-    console.log(progressData);
-});
+import { pipeline } from '@huggingface/transformers';
+import { env } from '@huggingface/transformers';
 
-
-try {
-    await browser.trial.ml.createEngine({
-        modelHub: "huggingface",
-        taskName: "summarization"
-        // taskName: "summarization",
-        // modelId: "Xenova/distilbart-cnn-6-6"
-    });
-} catch (error) {
-    console.log('Could not create engine, it is probably already created')
-    console.log(error)
-}
+env.allowRemoteModels = false;
+env.allowLocalModels = true;
+env.localModelPath = '/content_scripts/';
+env.backends.onnx.wasm.wasmPaths = '/content_scripts/';
 
 const activeTabId = async () => (await browser.tabs.query({ active: true, currentWindow: true }))[0].id;
 
@@ -45,12 +29,25 @@ let text = await browser.tabs.sendMessage((await activeTabId()), {
     command: "tldr_extractText",
 });
 
+console.log(`and the result is ${JSON.stringify(text)}`)
+const generator = await pipeline('summarization');
+
+//     console.log(`acquired pipeline... complete`)
+
+// text = 'The tower is 324 metres (1,063 ft) tall, about the same height as an 81-storey building, ' +
+//     'and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side. ' +
+//     'During its construction, the Eiffel Tower surpassed the Washington Monument to become the tallest ' +
+//     'man-made structure in the world, a title it held for 41 years until the Chrysler Building in New ' +
+//     'York City was finished in 1930. It was the first structure to reach a height of 300 metres. Due to ' +
+//     'the addition of a broadcasting aerial at the top of the tower in 1957, it is now taller than the ' +
+//     'Chrysler Building by 5.2 metres (17 ft). Excluding transmitters, the Eiffel Tower is the second ' +
+//     'tallest free-standing structure in France after the Millau Viaduct.';
 
 let result
 try {
     console.log('attempting to use generator with the text')
-    result = await browser.trial.ml.runEngine({
-        args: [text],
+    result = await generator(text, {
+        max_new_tokens: 400,
     });
     console.log(JSON.stringify(result))
     document.getElementById('popup-content').innerText = result[0].summary_text
@@ -61,3 +58,9 @@ try {
 }
 
 console.log(`acquired summary... complete`)
+
+// })
+// .catch(e => {
+//     console.error(e)
+//     debugger;
+// });
