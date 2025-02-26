@@ -5,6 +5,7 @@ env.allowRemoteModels = false;
 env.allowLocalModels = true;
 env.localModelPath = '/ml/';
 env.backends.onnx.wasm.wasmPaths = '/ml/';
+env.useBrowserCache = false;
 
 const getActiveTab = async () => (await browser.tabs.query({ active: true, currentWindow: true }))[0];
 
@@ -34,7 +35,7 @@ browser.menus.onClicked.addListener(async ({ menuItemId }, tab) => {
 
     document.getElementById('content').innerText = `Summarizing... ${text}`;
 
-    const generator = await pipeline('summarization');
+    const generator = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
 
     const summary = await generator(text, {
         max_new_tokens: 400,
