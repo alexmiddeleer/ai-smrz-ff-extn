@@ -3,8 +3,8 @@
   "module": "index.js",
   "type": "module",
   "scripts": {
-    "build": "bun build ./popup/popup.html --outdir ./extension_dist",
-    "build:watch": "bun build ./popup/popup.html --outdir ./extension_dist --watch"
+    "build": "bun build ./window.html --outdir ./extension_dist",
+    "build:watch": "bun build ./window.html --outdir ./extension_dist --watch"
   },
   "devDependencies": {
     "@types/bun": "latest"

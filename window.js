@@ -1,3 +1,11 @@
+import { pipeline } from '@huggingface/transformers';
+import { env } from '@huggingface/transformers';
+
+env.allowRemoteModels = false;
+env.allowLocalModels = true;
+env.localModelPath = '/ml/';
+env.backends.onnx.wasm.wasmPaths = '/ml/';
+
 const getActiveTab = async () => (await browser.tabs.query({ active: true, currentWindow: true }))[0];
 
 browser.contextMenus.create({
@@ -22,8 +30,17 @@ browser.menus.onClicked.addListener(async ({ menuItemId }, tab) => {
     let text = await browser.tabs.sendMessage((await getActiveTab()).id, {
       command: "extractText",
     });
-    
-    document.getElementById('content').innerText = text;
+
+
+    document.getElementById('content').innerText = `Summarizing... ${text}`;
+
+    const generator = await pipeline('summarization');
+
+    const summary = await generator(text, {
+        max_new_tokens: 400,
+      });
+    document.getElementById('content').innerText = `${summary[0].summary_text} ${text}`;
+
   }
 })
 
