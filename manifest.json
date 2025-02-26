@@ -7,14 +7,22 @@
     "48": "icons/tldr-icon-48.png",
     "96": "icons/tldr-icon-96.png"
   },
-  "permissions": [
-    "activeTab",
-    "scripting"
-  ],
-  "action": {
-    "default_popup": "extension_dist/popup.html"
-  },
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'"
-  }
+  },
+  "sidebar_action": {
+    "default_title": "Page text reader",
+    "default_panel": "window.html",
+    "default_icon": {
+      "19": "icons/window19.png",
+      "38": "icons/window38.png"
+    }
+  },
+  "permissions": [
+    "tabs",
+    "scripting",
+    "activeTab",
+    "contextMenus",
+    "menus"
+  ]
 }

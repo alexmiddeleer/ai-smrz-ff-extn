@@ -38,7 +38,7 @@
      * Call "insertBeast()" or "removeExistingBeasts()".
      */
     browser.runtime.onMessage.addListener((message) => {
-        if (message.command === "tldr_extractText") {
+        if (message.command === "extractText") {
             // console.log(`received message ${JSON.stringify(message)}`)
             const result = extractUniqueText();
             // console.log(`returning ${result.substring(0, Math.min(result.length - 1, 50))}...`)
